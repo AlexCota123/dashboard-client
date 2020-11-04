@@ -1,0 +1,14 @@
+%background-li {
+    background-color: #805994;
+}
+.nav-items {
+    li:not(:first-child):hover{
+        @extend %background-li;
+    }
+
+    li:last-child:hover{
+        @extend %background-li;
+        border-bottom-right-radius: 8px;
+    }
+
+}
