@@ -87,11 +87,7 @@ const Forms = (props) => {
                 case 'number':
                     input = {... input,
                         type: 'text',
-                        onKeyPress: KeysValidation.number
                     }
-                    // input.type = 'text'
-                    // input.pattern = "\\d*"
-                    // input.onKeyPress = (e) => {KeysValidation.number(e)}
                 default:
                     inputTag = <input key={input.name + index + !!input.disabled} onChange={(e) => {props.onChange(e.target)}} {...input} className={'col-12'} />
                     break;
