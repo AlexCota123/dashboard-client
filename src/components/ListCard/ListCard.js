@@ -63,8 +63,9 @@ const CardList = (props) => {
     const showInfo = (item) => {
         let dataAux = {...item}
         let inputsAux = JSON.parse(JSON.stringify(props.inputs))
+        console.log('dataAux: ', dataAux)
         let inputin = inputsAux.map(input => {
-            if (input.type === 'select-multi' ){
+            if (input.type === 'select-multi' && !!dataAux[input.name]){
                 input.options = dataAux[input.name].map(item => ({...item, ...{label: item.name + ' ' + (item.lastName || "")}}))
             }else {
                 input.value = dataAux[input.name] || null
@@ -122,30 +123,17 @@ const CardList = (props) => {
         {/* {errors && <div>Error: {errors} </div>} */}
         {dataList &&
             <div className="table">
-                {props.nameList === 'proyecto'? 
+                {
                     dataList.map((item, index) => (
                         <div className="d-flex px-0">
                             <div className="d-flex col" onClick={() => showInfo(item)}>
                                 <div className="col-2">{index} </div>
-                                <div className="col">{item.name}</div>
+                                <div className="col">{item.label}</div>
                             </div>
                             <div className="d-flex ml-0 justify-content-center align-items-center" style={{cursor: 'pointer'}} onClick={() => editInfo(item)}>
                                 <img src={editIcon} width="20" height="20" />
                             </div>
                             <div key={index} className=" d-flex ml-auto justify-content-center align-items-center pr-2 col-1" style={{cursor: 'pointer'}} onClick={() => onDelete(item.id)}> 
-                                {TrashIconFill}
-                            </div>
-                        </div>
-                    )):
-                    dataList.map((item, index) => (
-                        <div className="d-flex pr-0">
-                            <div className="col-1">{index} </div>
-                            <div className="col">{item.name} </div>
-                            <div className="col-1">{item.lastName} </div>
-                            <div className="d-flex ml-0 justify-content-center align-items-center" style={{cursor: 'pointer'}} onClick={() => editInfo(item)}>
-                                <img src={editIcon} width="20" height="20" />
-                            </div>
-                            <div key={index} className=" d-flex ml-auto justify-content-center align-items-center pr-2" style={{cursor: 'pointer'}} onClick={() => onDelete(item.id)}> 
                                 {TrashIconFill}
                             </div>
                         </div>

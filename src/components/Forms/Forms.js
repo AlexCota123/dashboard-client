@@ -5,7 +5,11 @@ const Forms = (props) => {
     const [showDropdownMulti, setshowDropdownMulti] = useState({})
     const [inputs, setInputs] = useState([])
 
-    
+    const KeysValidation = {
+        number: (e) => {
+            console.log('e: ', e)
+        }
+    }
 
     const dropdown = (name) => {
         let dropDownAux = {...showDropdownMulti}
@@ -86,8 +90,16 @@ const Forms = (props) => {
                 case 'text-area':
                     inputTag = <textarea key={input.name + index + !!input.disabled} onChange={(e) => {props.onChange(e.target)}} {...input} />
                     break;
+                case 'number':
+                    input = {... input,
+                        type: 'text',
+                        onKeyPress: KeysValidation.number
+                    }
+                    // input.type = 'text'
+                    // input.pattern = "\\d*"
+                    // input.onKeyPress = (e) => {KeysValidation.number(e)}
                 default:
-                    inputTag = <input key={input.name + index + !!input.disabled} onChange={(e) => {props.onChange(e.target)}} {...input} className="col-12" />
+                    inputTag = <input key={input.name + index + !!input.disabled} onChange={(e) => {props.onChange(e.target)}} {...input} className={'col-12'} />
                     break;
             }
 

@@ -34,13 +34,13 @@ const initialInputs = [{
         required: true,
     },{
         name: 'description',
-        className: 'col-12',
+        className: 'col-12 mt-1',
         type: 'text-area',
         label: 'Descripción del proyecto*',
         required: true
     },{
         name: 'users',
-        className: 'col-12',
+        className: 'col-12 mt-1',
         type: 'select-multi',
         label: 'Usuarios',
         options: []
@@ -50,7 +50,7 @@ const initialInputs = [{
 
 export default () => {
     const {loading, error, data: dataProjects} = useQuery(ProjectApi.getProjects())
-    const {loading: userLoading, error: userError, data: dataUsers} = useQuery(UserApi.getUsers())
+    const {loading: userLoading, error: userError, data: dataUsers} = useQuery(UserApi.getUsersWOProjects())
     const [createObject, {loading: loadingMutation, error: errorMutation}] = useMutation(ProjectApi.addProject())
     const [deleteObject, {loading: loadingDelete, error: errorDelete, data: responseData}] = useMutation(ProjectApi.deleteProject())
     const [updateObject, {loading: loadingUpdate, error: errorUodate, data: updateData}] = useMutation(ProjectApi.updateProject())
@@ -60,7 +60,10 @@ export default () => {
     
     useEffect(() => {
         if(!!dataProjects){
-            setdataList(dataProjects.projects)
+            let projectList = dataProjects.projects.map(project => (
+                {...project, label: project.name}
+            ))
+            setdataList(projectList)
         }
     }, [dataProjects])
 
@@ -70,7 +73,7 @@ export default () => {
         if(!!dataUsers){
             let inputsAux = [...inputs]
             inputsAux[inputsAux.length -1 ].options = dataUsers.users.map(user => (
-                {...user, ...{label: user.name + ' ' + user.lastName || '' }})
+                {...user, label: user.name + ' ' + user.lastName || '' })
             )
             setInputs(inputsAux)
         }
@@ -97,8 +100,8 @@ export default () => {
                 }
                 try {
                     const {addProject: newObject} = data
-                    console.log('newObject: ', newObject)
-                    const dataListAux = [...dataList, newObject]
+                    form.label = form.name
+                    const dataListAux = [...dataList, form]
                     setdataList(dataListAux)
                 } catch (error) {
                     console.log('error: ', error)
@@ -109,7 +112,13 @@ export default () => {
     }
 
     const onEdit = (form) => {
-        console.log('form: ', form)
+
+        form.users.map( item => {
+            delete item.label
+            delete item.checked
+        
+        })
+
         updateObject({variables: {input: form}, 
             update(cache, {data}) {
                 if(!data){
@@ -142,8 +151,7 @@ export default () => {
                 Añadir
             </button>
         </div>
-
-{showModal && <InputObject inputs={inputs} objectName={"proyecto"} onSubmit={onSubmit} onCancel={() => {setShowModal(false)}} addData={ProjectApi.addProject} /> }
+        {showModal && <InputObject inputs={inputs} objectName={"proyecto"} onSubmit={onSubmit} onCancel={() => {setShowModal(false)}} addData={ProjectApi.addProject} /> }
         <CardList nameList={"proyecto"} data={dataList} onDelete={onDelete} onEdit={onEdit} inputs={inputs} />
     </div>
 }

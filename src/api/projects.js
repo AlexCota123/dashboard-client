@@ -20,6 +20,18 @@ const ProjectApi = {
         `
         return query
     },
+    getProjectsWOUsers: () => {
+        const query = gql`
+            query getProjects {
+                projects {
+                    id
+                    name
+                    description
+                }
+            }
+        `
+        return query
+    },
     getProject: (id) => {
         const query = gql`
             query getProject($id: ID) {

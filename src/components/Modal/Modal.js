@@ -8,7 +8,7 @@ const Modal = (props) => {
                     <div className="modal-header" >
                         <h5 className="modal-title" >{props.tittle} </h5>
                     </div>
-                    <div className="modal-body">
+                    <div className="modal-body d-flex flex-wrap justify-content-between">
                         {props.child} 
                     </div>
                     <div className="modal-footer">
