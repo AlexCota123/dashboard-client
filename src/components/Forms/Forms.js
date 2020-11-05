@@ -5,11 +5,7 @@ const Forms = (props) => {
     const [showDropdownMulti, setshowDropdownMulti] = useState({})
     const [inputs, setInputs] = useState([])
 
-    const KeysValidation = {
-        number: (e) => {
-            console.log('e: ', e)
-        }
-    }
+    
 
     const dropdown = (name) => {
         let dropDownAux = {...showDropdownMulti}
@@ -23,11 +19,9 @@ const Forms = (props) => {
         let optionValue = {...option}
         delete optionValue.label
         delete optionValue.__typename
-        console.log('optionValue: ', optionValue )
-        console.log('checks[name]: ', checks[name])
+
         let index = checks[name] ? checks[name].findIndex(check => {
-            console.log('check: ', check)
-            console.log('option: ', option)
+
            return check.id === option.id}) : -1
         if(index >= 0) {
             checks[name][index].checked = !checks[name][index].checked  
@@ -43,7 +37,7 @@ const Forms = (props) => {
             delete item.checked
             return item
         })
-        console.log('formChecks: ', formChecks)      
+
         setCheckedMulti(checks)
         props.onChange({name,value: formChecks})
     }

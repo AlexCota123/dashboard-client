@@ -92,7 +92,7 @@ export default () => {
     }
 
     const onSubmit = (form) => {
-        console.log('form: ', form)
+
         createObject({variables: {input: form}, 
             update(cache, {data}) {
                 if(!data){

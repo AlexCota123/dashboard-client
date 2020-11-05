@@ -23,7 +23,7 @@ const InputObject = (props) => {
             }
             return input
         })
-        // console.log('props.getDataList: ', props.getDataList())
+
         setForm(formaAux)
     }, [])
 

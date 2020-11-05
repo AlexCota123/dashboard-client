@@ -62,12 +62,11 @@ export default () => {
 
     useEffect(() => {
         if(!!dataProjects){
-            console.log('dataProjects: ', dataProjects)
+
             let inputsAux = [...inputs]
             inputsAux[inputsAux.length -1 ].options = dataProjects.projects.map(project => (
                 {...project, ...{label: project.name}})
             )
-            console.log('inputsAux: ', inputsAux)
             setInputs(inputsAux)
         }
     }, [dataProjects])

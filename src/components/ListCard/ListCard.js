@@ -63,7 +63,7 @@ const CardList = (props) => {
     const showInfo = (item) => {
         let dataAux = {...item}
         let inputsAux = JSON.parse(JSON.stringify(props.inputs))
-        console.log('dataAux: ', dataAux)
+
         let inputin = inputsAux.map(input => {
             if (input.type === 'select-multi' && !!dataAux[input.name]){
                 input.options = dataAux[input.name].map(item => ({...item, ...{label: item.name + ' ' + (item.lastName || "")}}))
