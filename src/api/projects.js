@@ -51,6 +51,11 @@ const ProjectApi = {
                     id
                     name
                     description
+                    users {
+                        id 
+                        name
+                        lastName
+                    }
                 } 
             }
         `

@@ -40,11 +40,11 @@ const initialInputs = [{
 
 
 export default () => {
-    const {loading, error, data: dataUsers} = useQuery(UserApi.getUsers())
-    const {loading: userLoading, error: userError, data: dataProjects} = useQuery(ProjectApi.getProjectsWOUsers())
-    const [createObject, {loading: loadingMutation, error: errorMutation}] = useMutation(UserApi.addUser())
-    const [deleteObject, {loading: loadingDelete, error: errorDelete, data: responseData}] = useMutation(UserApi.deleteUser())
-    const [updateObject, {loading: loadingUpdate, error: errorUodate, data: updateData}] = useMutation(UserApi.updateUser())
+    const {loading, error, data: dataUsers} = useQuery(UserApi.getUsers(), {onError: () => {}})
+    const {loading: userLoading, error: userError, data: dataProjects} = useQuery(ProjectApi.getProjectsWOUsers(), {onError: () => {}})
+    const [createObject, {loading: loadingMutation, error: errorMutation}] = useMutation(UserApi.addUser(), {onError: () => {}})
+    const [deleteObject, {loading: loadingDelete, error: errorDelete, data: responseData}] = useMutation(UserApi.deleteUser(), {onError: () => {}})
+    const [updateObject, {loading: loadingUpdate, error: errorUpdate, data: updateData}] = useMutation(UserApi.updateUser(), {onError: () => {}})
     const [dataList, setdataList] = useState([])
     const [inputs, setInputs] = useState([...initialInputs])
     const [showModal, setShowModal] = useState(false)
@@ -58,6 +58,24 @@ export default () => {
         }
     }, [dataUsers])
 
+    useEffect(() => {
+        if(error || userError || errorMutation || errorDelete || errorUpdate){
+            console.log((error || userError || errorMutation || errorDelete || errorUpdate))
+            if(error || userError) {
+                alert("Sucedio un error al obtener los datos: " + (error || userError).msg )
+            }
+            if(errorMutation) {
+                alert("Sucedion un error al Guardar: " + errorMutation.msg)
+            }
+            if(errorUpdate) {
+                alert("Sucedion un error al Modificar: " + errorUpdate.msg)
+            }
+            if(errorDelete) {
+                alert("Sucedion un error al Eliminar: " + errorDelete.msg)
+            }
+
+        }
+    },[error,userError,errorMutation,errorDelete,errorUpdate])
     
 
     useEffect(() => {
@@ -84,18 +102,23 @@ export default () => {
     }
 
     const onSubmit = (form) => {
-        form.age = Number(form.age)
-        console.log('form: ', form)
-        createObject({variables: {input: form}, 
+        let formInput = JSON.parse(JSON.stringify(form))
+        formInput.projects.map( item => {
+            delete item.label
+            delete item.checked
+        
+        })
+        formInput.age = Number(formInput.age)
+
+        createObject({variables: {input: formInput}, 
             update(cache, {data}) {
                 if(!data){
                     return
                 }
                 try {
                     const {addUser: newObject} = data
-
-                    form.label = form.name + ' ' + form.lastName || ''
-                    const dataListAux = [...dataList, form]
+                    newObject.label = newObject.name + ' ' + newObject.lastName || ''
+                    const dataListAux = [...dataList, newObject]
                     setdataList(dataListAux)
                 } catch (error) {
                     console.log('error: ', error)
@@ -107,13 +130,14 @@ export default () => {
 
     const onEdit = (form) => {
         
-        form.projects.map( item => {
+        let formInput = JSON.parse(JSON.stringify(form))
+        formInput.projects.map( item => {
             delete item.label
             delete item.checked
         
         })
 
-        updateObject({variables: {input: form}, 
+        updateObject({variables: {input: formInput}, 
             update(cache, {data}) {
                 if(!data){
                     return
@@ -123,6 +147,8 @@ export default () => {
                     const {updateUser} = data
                     const dataListAux = dataList.map( item => {
                         if(item.id === updateUser.id) {
+                            updateUser.label = updateUser.name + ' ' + updateUser.lastName || ''
+
                             return {...updateUser}
                         }
                         return {...item}

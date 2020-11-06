@@ -39,6 +39,10 @@ const UserApi = {
                     name
                     lastName
                     age
+                    projects {
+                        id
+                        name
+                    }
                 }
             }
         `
